@@ -1,8 +1,8 @@
 module github.com/sdfwds4/test_go-micro_qps
 
-go 1.22
+go 1.21
 
-toolchain go1.22.9
+toolchain go1.21.13
 
 require (
 	github.com/micro/plugins/v5/transport/nats v1.0.2
