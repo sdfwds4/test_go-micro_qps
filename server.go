@@ -6,17 +6,18 @@ import (
 	"sync/atomic"
 	"time"
 
-	hello "github.com/micro/examples/greeter/srv/proto/hello"
-	"github.com/micro/go-micro"
+	pb "github.com/sdfwds4/test_go-micro_qps/proto"
+
+	// "github.com/micro/plugins/v5/server/grpc"
+	"go-micro.dev/v5"
 )
 
 var counter int64
 
-type say struct{}
+type Greeter struct{}
 
-func (s *say) Hello(ctx context.Context, req *hello.Request, rsp *hello.Response) error {
-	//log.Print("Received Say.Hello request")
-	rsp.Msg = "Hello " + req.Name
+func (g *Greeter) Hello(ctx context.Context, req *pb.Request, rsp *pb.Response) error {
+	rsp.Greeting = "Hello " + req.Name
 
 	atomic.AddInt64(&counter, 1)
 
@@ -25,16 +26,16 @@ func (s *say) Hello(ctx context.Context, req *hello.Request, rsp *hello.Response
 
 func main() {
 	service := micro.NewService(
-		micro.Name("go.micro.srv.greeter"),
-		micro.RegisterTTL(time.Second*30),
-		micro.RegisterInterval(time.Second*10),
+		micro.Name("helloworld"),
+		micro.Address("127.0.0.1:8081"),
+		// micro.Server(grpc.NewServer()),
 	)
 
 	// optionally setup command line usage
 	service.Init()
 
 	// Register Handlers
-	hello.RegisterSayHandler(service.Server(), new(say))
+	pb.RegisterGreeterHandler(service.Server(), new(Greeter))
 
 	go func() {
 		var t = time.Now().UnixNano() / 1e6

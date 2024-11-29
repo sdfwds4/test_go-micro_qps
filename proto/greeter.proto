@@ -1,8 +1,9 @@
 syntax = "proto3";
 
-package go.micro.srv.greeter;
+package greeter;
+option go_package = "/proto;greeter";
 
-service Say {
+service Greeter {
 	rpc Hello(Request) returns (Response) {}
 }
 
@@ -11,5 +12,5 @@ message Request {
 }
 
 message Response {
-	string msg = 1;
+	string greeting = 2;
 }
